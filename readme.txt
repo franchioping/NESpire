@@ -25,9 +25,8 @@ Game controls:
     Shift = Start
 
 Emulator controls:
-    3 - Save State (doesnt write to file)
-    4 - Load State (doesnt write to file)
-    1,2,5,6 = Set frameskip
+    
+    (1-6)   = Set frameskip
     *       = Fast-forward
     B       = Reverse border color
     P       = Pause (Many NES games have their own pause feature, but it will
@@ -37,7 +36,9 @@ Emulator controls:
     R       = Reverse colors
     S       = Write save file (Only applicable to games which actually have
                 battery-backed save memory; e.g. Zelda, Final Fantasy; Doesn't
-		write the State)
+                write the State)
+    ^       = Save State (doesnt write to file)
+    x²       = Load State (doesnt write to file)
 
 [ Known Issues ]
 

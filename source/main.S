@@ -10,7 +10,7 @@ main:
 	sub	sp, sp, #s_SIZE
 	bic	sp, sp, #s_ALIGN - 1
 	mov	r9, sp
-        sub     sp, sp, #s_SIZE // Reserve space for state ADDED
+    sub sp, sp, #s_SIZE // Reserve space for state ADDED
 	
 	mov	r4, #0
 	mov	r6, #s_SIZE
@@ -176,7 +176,7 @@ newframe:
 	mov	r8, #0
 pause_loop:
 
-#define num_command_keys 12
+#define num_command_keys 14
 	@ Scan keypad
 	ldr	r3, [r9, #s_hw_keypad_invert]
 	mov	r4, #0
@@ -198,10 +198,8 @@ pause_loop:
 
 	tst	r5, #1 << 0;	movne	r10, #1
 	tst	r5, #1 << 1;	movne	r10, #2
-	//tst	r5, #1 << 2;	movne	r10, #3
-        tst     r5, #1 << 2;    blne save_state
-	//tst	r5, #1 << 3;	movne	r10, #4
-        tst     r5, #1 << 3;    blne load_state
+	tst	r5, #1 << 2;	movne	r10, #3
+	tst	r5, #1 << 3;	movne	r10, #4
 	
 	tst	r5, #1 << 4;	movne	r10, #5
 	tst	r5, #1 << 5;	movne	r10, #6
@@ -211,6 +209,10 @@ pause_loop:
 	tst	r5, #1 << 9;	blne	invert_colors   @ R (Reverse)
 	tst	r5, #1 << 10;	blne	sram_save       @ S (Save SRAM)
 	tst	r4, #1 << 11;	bne	fast_forward    @ *
+	tst r5, #1 << 12;    blne save_state
+	tst r5, #1 << 13;    blne load_state
+
+
 
 	@ Keep looping until the frame timer reaches 5/300 (1/60) of a second
 	ldrb	r0, [r9, #s_frame_timer]
@@ -278,21 +280,32 @@ touchpad_info_page:
 touchpad_main_page:
 	.byte	0x04
 
-	@       1    2    3    4    5    6    B    P    Q    R    S    *
+	@       1    2    3    4    5    6    B    P    Q    R    S    *     ^    x^2
 clickpad_command_map:
-	.byte	0x17,0x15,0x13,0x27,0x25,0x23,0x64,0x28,0x26,0x24,0x22,0x31
+	.byte	0x17,0x15,0x13,0x27,0x25,0x23,0x64,0x28,0x26,0x24,0x22,0x31,0x49,0x39
 touchpad_command_map:
-	.byte	0x17,0x64,0x13,0x27,0x56,0x23,0x45,0x22,0x21,0x20,0x16,0x48
+	.byte	0x17,0x64,0x13,0x27,0x56,0x23,0x45,0x22,0x21,0x20,0x16,0x48,0x49,0x29
 
 	.align	4
 
 clickpad_read_input:
+
+	@ r2 = 0xFFFFFF00
 	mvn	r2, #0xFF
+
+	@Load keypad state
+		@ loads address into r0
+		@ Each bit in the 900E0010-900E001F registers represents a key. Only bits 0 to 10 are used in each halfword. The mapping depends on the currently used keypad. 
 	ldr	r0, =0x900E0000
-	ldrd	r0, [r0, #0x18]
+		@ loads double word in (adress + 0x18) into r0
+	ldrd r0, [r0, #0x18]
+
+	@invert
 	ldr	r3, [r9, #s_hw_keypad_invert]
 	eor	r0, r3
 	eor	r1, r3
+
+	@key mapping
 	tst	r0, #1 << 25;	orrne	r2, r2, #0x08	@ Caps (Start)
 	tst	r1, #1 << 7;	orrne	r2, r2, #0x01	@ Esc (A)
 	tst	r1, #1 << 9;	orrne	r2, r2, #0x02	@ Tab (B)
