@@ -12,12 +12,16 @@ main:
 	mov	r9, sp
     sub sp, sp, #s_SIZE // Reserve space for state ADDED
 	
+	
 	mov	r4, #0
 	mov	r6, #s_SIZE
 1:	subs	r6, r6, #4
 	str	r4, [r9, r6]
 	bne	1b
 	str	r5, [r9, #s_saved_sp]
+
+
+
 
 	@ Get our folder path
 	add	r4, r9, #s_path
