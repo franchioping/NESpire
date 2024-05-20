@@ -6,11 +6,17 @@
 
 void util_stuff();
 
+
+int KEYS_TO_QUIT = 2;
+
 void util_stuff(){
 
     printf("Hello World!\n");
+    puts("TEST");
 
 
-    wait_key_pressed();
+    for(int i = 0; i < KEYS_TO_QUIT; i++){
+        wait_key_pressed();
+    }
     return;
 }
