@@ -32,11 +32,10 @@ endif
 OBJS = $(patsubst %.c, %.o, $(shell find . -name \*.c))
 OBJS += $(patsubst %.cpp, %.o, $(shell find . -name \*.cpp))
 OBJS += $(patsubst %.S, %.o, $(shell find . -name \*.S))
-DISTDIR = .
-vpath %.tns $(DISTDIR)
-vpath %.elf $(DISTDIR)
+DISTDIR = builds
 
-all: $(EXE).tns
+
+all:$(DISTDIR)/$(EXE).tns
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -c $< -o $@
@@ -47,15 +46,15 @@ all: $(EXE).tns
 %.o: %.S
 	$(AS) -c $< -o $@
 
-$(EXE).elf: $(OBJS)
+$(DISTDIR)/$(EXE).elf: $(OBJS)
 	mkdir -p $(DISTDIR)
 	$(LD) $^ -o $@ $(LDFLAGS)
 
-$(EXE).tns: $(EXE).elf
+$(DISTDIR)/$(EXE).tns: $(DISTDIR)/$(EXE).elf
 	$(GENZEHN) --input $^ --output $@.zehn $(ZEHNFLAGS)
 	$(call buildver)
 	make-prg $@.zehn $@
 	rm $@.zehn
 
 clean:
-	rm -f $(OBJS) $(DISTDIR)/$(EXE).tns $(DISTDIR)/$(EXE).elf $(DISTDIR)/$(EXE).zehn nespire_mod_*.elf nespire_mod_*.tns
+	rm -f $(OBJS) 

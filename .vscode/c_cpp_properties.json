@@ -1,16 +1,24 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "nspire",
             "includePath": [
-                "${workspaceFolder}/**",
+                "/home/franchioping/NSpire/Nespire/**",
                 "/home/franchioping/NSpire/Ndless/ndless-sdk/include/*"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/home/franchioping/NSpire/Ndless/ndless-sdk/bin/nspire-gcc",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-arm"
+            "compilerPathInCppPropertiesJson": "/home/franchioping/NSpire/Ndless/ndless-sdk/bin/nspire-gcc",
+            "mergeConfigurations": false,
+            "browse": {
+                "path": [
+                    "/home/franchioping/NSpire/Ndless/ndless-sdk/include/*",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
         }
     ],
     "version": 4

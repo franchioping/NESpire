@@ -373,6 +373,8 @@ touchpad_read_input:
 
 	.pool
 
+.extern write_save_state
+
 save_state:
     str lr, saved_state_cpu_status+56
     adr lr, saved_state_cpu_status
@@ -392,8 +394,11 @@ save_state:
     cmp r1, #0
     bne sstate_loop
 
-    mov r0, #1
-    str r0, save_state_exists
+
+
+	mov r0, saved_state_cpu_status
+	str r1, saved_state_cpu_cpsr
+	bl write_save_state
 
     ldr lr, saved_state_cpu_status+56 // subroutine return
 

@@ -1,3 +1,7 @@
 {
-    "makefile.makefilePath": ""
+    "makefile.makefilePath": "",
+    "files.associations": {
+        "platform-nspire.h": "c",
+        "*.inc": "c"
+    }
 }
