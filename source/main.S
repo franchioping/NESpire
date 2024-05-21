@@ -396,8 +396,10 @@ save_state:
 
 
 
-	mov r0, saved_state_cpu_status
-	str r1, saved_state_cpu_cpsr
+	ldr r0, =saved_state_cpu_status
+	ldr r1, =saved_state_cpu_cpsr
+	sub r2, r9, #s_SIZE
+
 	bl write_save_state
 
     ldr lr, saved_state_cpu_status+56 // subroutine return
