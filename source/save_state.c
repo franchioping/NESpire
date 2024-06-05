@@ -4,27 +4,22 @@
 #include <stdio.h>
 
 
-#define s_SIZE                  0x4600
+#define s_SIZE                  0x4600;
 
-const size_t cpu_status_size = (15 * sizeof(uint16_t));
+void write_save_state(uint32_t saved_state_cpu_status_addr, uint32_t saved_state_cpu_cpsr);
 
-void write_save_state(uint8_t* saved_state_cpu_status_addr, uint8_t* saved_state_cpu_cpsr, void* state_ds_addr);
+void write_save_state(uint32_t saved_state_cpu_status_addr, uint32_t saved_state_cpu_cpsr){
+    size_t lenght = s_SIZE;
 
-void write_save_state(uint8_t* saved_state_cpu_status_addr, uint8_t* saved_state_cpu_cpsr, void* state_ds_addr){
-    size_t data_size = cpu_status_size + sizeof(uint8_t) + s_SIZE;
-    uint8_t *data = malloc(data_size);
-    uint8_t *data_start = data;
+    size_t data_size = s_SIZE + sizeof(uint32_t);
+    uint32_t *data = malloc(data_size);
 
 
-    memcpy(data, state_ds_addr, s_SIZE);
-    data += s_SIZE;
+    memcpy(data, saved_state_cpu_status_addr, lenght);
 
-    memcpy(data, saved_state_cpu_status_addr, cpu_status_size);
-    data += cpu_status_size;
-
-    memcpy(data, saved_state_cpu_cpsr, 1);
+    data[data_size-1] = saved_state_cpu_cpsr;
 
     FILE* savefile = fopen("/documents/ndless/test.tns", "wb");
-    fwrite(data_start, data_size, 1, savefile);
+    fwrite(data, data_size, 1, savefile);
     fclose(savefile);
 }
